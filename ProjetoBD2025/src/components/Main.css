@@ -1,0 +1,9 @@
+body {
+    background-color: #bdbebd;
+}
+
+.movie-card {
+  min-height: 50rem; /* garante altura mínima */
+  display: flex;
+  flex-direction: column;
+}
