@@ -7,3 +7,9 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.card-img-fixed {
+  width: 100%;
+  height: 460px;      /* define a altura padrão */
+  object-fit: cover;  /* recorta mantendo proporção */
+}

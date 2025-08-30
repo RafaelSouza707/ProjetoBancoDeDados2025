@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Container, Spinner, Alert, Card, Row, Col } from 'react-bootstrap';
-import './Main.css';
+import './Home.css';
 
 export default function App() {
 
@@ -208,7 +208,7 @@ export default function App() {
         {movies.map(movie => (
           <Col key={movie.id} md={3}>
             <Card className="movie-card">
-              {movie.imagem && <Card.Img variant="top" src={movie.imagem} />}
+              {movie.imagem && <Card.Img variant="top" src={movie.imagem} className='card-img-fixed' />}
               <Card.Body className="d-flex flex-column">
                 <Card.Title>{movie.titulo || 'Sem título'}</Card.Title>
                 <Card.Text className="flex-grow-1">

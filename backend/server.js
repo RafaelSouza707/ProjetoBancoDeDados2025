@@ -40,6 +40,7 @@ app.post('/movies', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
 app.get('/movies', async (req, res) => {
   try {
     const session = store.openSession();
