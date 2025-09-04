@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const IconeUsuario = ({ name, bgColor = '#0d6efd', color = '#fff' }) => {
+const IconeUsuario = ({ name, bgColor = '#0d6efdff', color = '#fff' }) => {
   const getFirstLetter = () => {
     if (!name || typeof name !== 'string' || name.trim() === '') {
       return '?'; // Retorna '?' se o nome for inválido ou vazio
@@ -12,8 +12,8 @@ const IconeUsuario = ({ name, bgColor = '#0d6efd', color = '#fff' }) => {
   const avatarStyle = {
     backgroundColor: bgColor,
     color: color,
-    width: '40px',
-    height: '40px',
+    width: '30px',
+    height: '30px',
     borderRadius: '50%',
     display: 'flex',
     justifyContent: 'center',

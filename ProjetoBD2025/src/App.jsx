@@ -1,23 +1,48 @@
-import { Routes, Route } from "react-router-dom";
-import MainLayout from './layout/MainLayout.jsx';
-import Home from './components/Home.jsx';
-import TelaPerfil from './components/TelaPerfil.jsx';
-import TelaLogin from './components/TelaLogin.jsx';
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import MainLayout from "./layout/MainLayout";
+import Home from "./components/Home";
+import TelaLogin from "./components/TelaLogin";
+import TelaADM from "./components/TelaADM";
+import TelaPerfil from "./components/TelaPerfil";
 
 function App() {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (e) {
+        localStorage.removeItem("user");
+        setUser(null);
+      }
+    }
+  }, []);
+
+
+  useEffect(() => {
+    if (user?.role === "admin") {
+      navigate("/tela-adm");
+    }
+  }, [user, navigate]);
 
   return (
-    <Routes>
+      <Routes>
+        <Route path="/" element={<MainLayout user={user} setUser={setUser} />}>
+          <Route index element={<Home user={user} />} />
+          <Route path="tela-login" element={<TelaLogin setUser={setUser} />} />
+          <Route path="tela-perfil" element={<TelaPerfil user={user} />} />
+          <Route
+            path="tela-adm"
+            element={user?.role === "admin" ? <TelaADM /> : <Home user={user} />}
+          />
+        </Route>
 
-      <Route path="/" element={ <MainLayout/> }>
-        <Route index element={ <Home/> } />
-        <Route path='tela-perfil' element={<TelaPerfil />}/>
-        <Route path='tela-login' element={<TelaLogin />} />
-      </Route>
-      
-    </Routes>
-  )
-
+      </Routes>
+  );
 }
 
 export default App;

@@ -1,123 +1,136 @@
-import Form from 'react-bootstrap/Form';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '/src/components/TelaLogin.css';
-import { useState } from 'react';
-import { Button, Row, Modal, Col } from 'react-bootstrap';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Form from "react-bootstrap/Form";
+import { Button, Row } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "/src/components/TelaLogin.css";
 
+function TelaLogin({ setUser }) {
+    const [nome, setNome] = useState("");
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const [modoCadastro, setModoCadastro] = useState(false);
+    const [showSenha, setShowSenha] = useState(false);
+    const navigate = useNavigate();
 
-const TelaLogin = () => {
+    const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+        const res = await fetch("http://localhost:5000/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha }),
+        });
 
-    const [ showSenha, setShowSenha ] = useState(false);
-    const [ showCadastro, setShowCadastro] = useState(false);
+        if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "Erro no login");
+        }
 
-    // Funções para gerenciar o estado do Modal
-    const handleCloseCadastro = () => setShowCadastro(false);
-    const handleShowCadastro = () => setShowCadastro(true);
+        const data = await res.json();
 
+        setUser(data);                             // atualiza state
+        localStorage.setItem("user", JSON.stringify(data)); // salva para persistência
+
+        navigate("/");
+    } catch (err) {
+        alert(err.message);
+    }
+    };
+
+    // cadastro
+    const handleCadastro = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await fetch("http://localhost:5000/users/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nome, email, senha }),
+            });
+
+            if (!res.ok) {
+                const errData = await res.json();
+                throw new Error(errData.error || "Erro ao cadastrar");
+            }
+
+            const data = await res.json();
+
+            // Garante que novo usuário tenha arrays iniciais
+            setUser({
+                ...data,
+                listaInteresse: [],
+                listaAssistido: []
+            });
+
+            navigate("/");
+        } catch (err) {
+            alert(err.message);
+        }
+    };
 
     return (
-        <>
-            <section className='d-flex justify-content-center align-items-center'>
-
-                <Form className='card-login'>
-                    
-                    <Form.Group className="mb-3" controlId="formGroupEmail">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" placeholder="exemplo@email.com" />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formGroupPassword">
-                        <Form.Label>Senha</Form.Label>
-                        <Form.Control type={showSenha ? "text" : "password"} placeholder="* * * *" />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="showPasswordCheck">
-                        <Form.Check
-                            type="checkbox"
-                            label="Mostrar senha"
-                            checked={showSenha}
-                            onChange={() => setShowSenha(!showSenha)}
-                            style={{ color: "black" }}
+        <section className="d-flex justify-content-center align-items-center">
+            <Form
+                className="card-login"
+                onSubmit={modoCadastro ? handleCadastro : handleLogin}
+            >
+                {modoCadastro && (
+                    <Form.Group className="mb-3">
+                        <Form.Label>Nome</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Digite seu nome"
+                            value={nome}
+                            onChange={(e) => setNome(e.target.value)}
                         />
                     </Form.Group>
+                )}
 
-                    <Row>
-                        <Button className='botao-form' variant="light">Entrar</Button>
-                        <Button onClick={handleShowCadastro} className='botao-form' variant="light">Inscrever-se</Button>
-                    </Row>
-                    
-                </Form>
+                <Form.Group className="mb-3">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control
+                        type="email"
+                        placeholder="exemplo@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </Form.Group>
 
-                <Modal show={showCadastro} onHide={handleCloseCadastro}>
-                    <Modal.Header closeButton>
-                        <Modal.Title> Inscreva-se </Modal.Title>
-                    </Modal.Header>
+                <Form.Group className="mb-3">
+                    <Form.Label>Senha</Form.Label>
+                    <Form.Control
+                        type={showSenha ? "text" : "password"}
+                        placeholder="* * * *"
+                        value={senha}
+                        onChange={(e) => setSenha(e.target.value)}
+                    />
+                </Form.Group>
 
-                    <Modal.Body>
-                        
-                    <Form>
+                <Form.Group className="mb-3">
+                    <Form.Check
+                        type="checkbox"
+                        label="Mostrar senha"
+                        checked={showSenha}
+                        onChange={() => setShowSenha(!showSenha)}
+                    />
+                </Form.Group>
 
-                        <Row className="mb-3">
-                            <Form.Group as={Col} controlId="formNome">
-                            <Form.Label> Nome completo </Form.Label>
-                            <Form.Control type="text" placeholder="João silva" />
-                            </Form.Group>
-                        </Row>
-
-                        <Row className="mb-3">
-                            <Form.Group as={Col} controlId="formEmail">
-                            <Form.Label> Email </Form.Label>
-                            <Form.Control type="email" placeholder="exemplo@email.com" />
-                            </Form.Group>
-                        </Row>
-
-                        <Row>
-                            <Form.Group as={Col} controlId="formSenha">
-                            <Form.Label> Senha </Form.Label>
-                            <Form.Control type={ showSenha ? "text" : "password" } placeholder="* * * *" />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="showPasswordCheck">
-                            <Form.Check
-                                    type="checkbox"
-                                    label="Mostrar senha"
-                                    checked={showSenha}
-                                    onChange={ () => setShowSenha(!showSenha) }
-                                    style={{ color: "black" }}
-                                />
-                            </Form.Group>
-                        </Row>
-
-                        <Row>
-                            <Form.Group as={Col} controlId="formRepitaSenha">
-                            <Form.Label> Repita a senha </Form.Label>
-                            <Form.Control type={ showSenha ? "text" : "password" } placeholder="* * * *" />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="showPasswordCheck">
-                            <Form.Check
-                                    type="checkbox"
-                                    label="Mostrar senha"
-                                    checked={showSenha}
-                                    onChange={ () => setShowSenha(!showSenha) }
-                                    style={{ color: "black" }}
-                                />
-                            </Form.Group>
-                            
-                        </Row>
-
-
-
-                        <Button className='mt-4' variant="primary" type="submit">
-                            Submit
-                        </Button>
-                    </Form>
-
-                    </Modal.Body>
-
-                </Modal>
-
-            </section>
-        </>
-    )
+                <Row>
+                    <Button type="submit" variant="light" className="botao-form">
+                        {modoCadastro ? "Cadastrar" : "Entrar"}
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="light"
+                        className="botao-form"
+                        onClick={() => setModoCadastro(!modoCadastro)}
+                    >
+                        {modoCadastro ? "Já tenho conta" : "Cadastre-se"}
+                    </Button>
+                </Row>
+            </Form>
+        </section>
+    );
 }
 
-export default TelaLogin
+export default TelaLogin;
