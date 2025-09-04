@@ -66,6 +66,8 @@ function TelaADM() {
     }
   };
 
+// https://uauposters.com.br/media/catalog/product/cache/1/thumbnail/800x930/9df78eab33525d08d6e5fb8d27136e95/2/1/214920140608-uau-posters-filmes-infantis-animacao-carros-cars--3.jpg
+
   const handleSave = async () => {
     const filme = { titulo, dataLancamento, sinopse, imagem, generos };
 
@@ -108,6 +110,7 @@ function TelaADM() {
     } catch (err) {
       alert(err.message);
     }
+    atualizarPagina();
   };
 
   useEffect(() => {
