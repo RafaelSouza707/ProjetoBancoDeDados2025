@@ -29,8 +29,8 @@ function TelaLogin({ setUser }) {
 
         const data = await res.json();
 
-        setUser(data);                             // atualiza state
-        localStorage.setItem("user", JSON.stringify(data)); // salva para persistência
+        setUser(data);                             
+        localStorage.setItem("user", JSON.stringify(data));
 
         navigate("/");
     } catch (err) {

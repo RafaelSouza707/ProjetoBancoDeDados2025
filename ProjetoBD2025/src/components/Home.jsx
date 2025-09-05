@@ -91,7 +91,6 @@ function Home({ user }) {
       if (!response.ok) throw new Error("Erro ao adicionar filme");
 
       await fetchUserMovies();
-      alert(`"${movie.titulo}" adicionado à sua lista!`);
     } catch (err) {
       alert(err.message);
     }
@@ -109,7 +108,6 @@ function Home({ user }) {
       if (!response.ok) throw new Error("Erro ao remover filme");
 
       await fetchUserMovies();
-      alert(`"${movie.titulo}" removido da sua lista!`);
     } catch (err) {
       alert(err.message);
     }
@@ -177,7 +175,7 @@ function Home({ user }) {
       <h5 className="mt-4 mb-4">Catálogo</h5>
       <Row className="g-3">
         {movies.map((movie) => (
-          <Col key={movie.id} md={3}>
+          <Col key={movie.id} md={2}>
             <Card className="movie-card h-100">
               {movie.imagem && (
                 <Card.Img

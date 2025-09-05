@@ -212,7 +212,7 @@ function TelaADM() {
       {/* Lista de filmes */}
       <Row className="g-3">
         {movies.map(movie => (
-          <Col key={movie.id} md={3}>
+          <Col key={movie.id} md={2}>
             <Card className="movie-card">
               {movie.imagem && <Card.Img variant="top" src={movie.imagem} className='card-img-fixed' />}
               <Card.Body className="d-flex flex-column">

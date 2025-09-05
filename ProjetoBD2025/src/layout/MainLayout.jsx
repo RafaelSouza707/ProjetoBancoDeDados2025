@@ -8,7 +8,7 @@ function MainLayout({ user, setUser }) {
 
   // logout
   const handleLogout = () => {
-    localStorage.removeItem("User");
+    localStorage.removeItem("user");
     setUser(null); 
     navigate("/tela-login");
   };
